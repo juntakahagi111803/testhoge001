@@ -1,0 +1,19 @@
+<h3 class="font-bold text-lg mb-2">Record #{{ index }} — {{ filename }}</h3>
+
+<div class="overflow-x-auto">
+  <table class="table table-sm">
+    <tbody>
+      {% for key, value in record.items() %}
+      <tr>
+        <th class="w-40 align-top">{{ key }}</th>
+        <td class="whitespace-pre-wrap break-all">{{ value }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="divider">Raw</div>
+<div class="mockup-code text-xs">
+  <pre class="px-4"><code>{{ formatted }}</code></pre>
+</div>

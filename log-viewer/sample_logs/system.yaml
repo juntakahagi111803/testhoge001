@@ -1,0 +1,37 @@
+- timestamp: "2026-03-06T09:00:00Z"
+  level: INFO
+  component: kernel
+  message: "System boot completed"
+  uptime_seconds: 0
+
+- timestamp: "2026-03-06T09:00:05Z"
+  level: INFO
+  component: network
+  message: "Network interface eth0 up"
+  ip: "192.168.1.100"
+
+- timestamp: "2026-03-06T09:05:00Z"
+  level: WARNING
+  component: disk
+  message: "Disk usage above threshold"
+  mount: "/var/log"
+  usage_percent: 85
+
+- timestamp: "2026-03-06T09:10:30Z"
+  level: ERROR
+  component: memory
+  message: "OOM killer invoked"
+  process: "java"
+  pid: 12345
+
+- timestamp: "2026-03-06T09:15:00Z"
+  level: INFO
+  component: cron
+  message: "Logrotate executed"
+  files_rotated: 5
+
+- timestamp: "2026-03-06T09:20:00Z"
+  level: DEBUG
+  component: systemd
+  message: "Service health check passed"
+  service: "nginx"

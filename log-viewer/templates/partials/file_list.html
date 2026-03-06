@@ -1,0 +1,14 @@
+<ul class="menu menu-sm w-full">
+  {% for f in files %}
+  <li>
+    <a class="file-item flex justify-between" data-file="{{ f.name }}" onclick="selectFile('{{ f.name }}')">
+      <span class="truncate">{{ f.name }}</span>
+      <span class="badge badge-ghost badge-xs">
+        {% if f.suffix == '.json' %}JSON{% else %}YAML{% endif %}
+      </span>
+    </a>
+  </li>
+  {% else %}
+  <li class="text-base-content/50 text-sm p-2">No log files found</li>
+  {% endfor %}
+</ul>

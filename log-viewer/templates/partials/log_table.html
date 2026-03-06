@@ -1,0 +1,51 @@
+<div class="mb-2 flex items-center gap-2">
+  <span class="badge badge-neutral">{{ filename }}</span>
+  <span class="text-sm text-base-content/60">
+    {{ filtered }} / {{ total }} records
+  </span>
+</div>
+
+{% if records %}
+<div class="overflow-x-auto max-h-[70vh] overflow-y-auto">
+  <table class="table table-xs table-pin-rows">
+    <thead>
+      <tr>
+        <th>#</th>
+        {% set sample = records[0] %}
+        {% for key in sample.keys() %}
+          {% if loop.index <= 6 %}
+          <th>{{ key }}</th>
+          {% endif %}
+        {% endfor %}
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in records %}
+      <tr class="hover
+        {% if record.get('level', record.get('severity', ''))|lower == 'error' %} text-error
+        {% elif record.get('level', record.get('severity', ''))|lower == 'warning' %} text-warning
+        {% elif record.get('level', record.get('severity', ''))|lower == 'critical' %} text-error font-bold
+        {% endif %}
+      ">
+        <td>{{ loop.index0 }}</td>
+        {% for key, value in record.items() %}
+          {% if loop.index <= 6 %}
+          <td class="max-w-xs truncate">{{ value }}</td>
+          {% endif %}
+        {% endfor %}
+        <td>
+          <button class="btn btn-ghost btn-xs" onclick="showDetail('{{ filename }}', {{ loop.index0 }})">
+            Detail
+          </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="text-center text-base-content/50 py-10">
+  No matching records
+</div>
+{% endif %}
