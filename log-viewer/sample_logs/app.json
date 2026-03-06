@@ -1,0 +1,12 @@
+[
+  {"timestamp": "2026-03-06T10:00:01Z", "level": "INFO", "service": "auth", "message": "User login successful", "user_id": "u-1001"},
+  {"timestamp": "2026-03-06T10:00:05Z", "level": "DEBUG", "service": "auth", "message": "Token validated", "user_id": "u-1001"},
+  {"timestamp": "2026-03-06T10:01:12Z", "level": "WARNING", "service": "api", "message": "Rate limit approaching", "endpoint": "/api/data", "rate": "95%"},
+  {"timestamp": "2026-03-06T10:02:30Z", "level": "ERROR", "service": "db", "message": "Connection pool exhausted", "pool_size": 20, "active": 20},
+  {"timestamp": "2026-03-06T10:02:45Z", "level": "INFO", "service": "db", "message": "Connection pool recovered", "pool_size": 20, "active": 12},
+  {"timestamp": "2026-03-06T10:03:00Z", "level": "INFO", "service": "api", "message": "Request processed", "endpoint": "/api/users", "duration_ms": 45},
+  {"timestamp": "2026-03-06T10:03:10Z", "level": "CRITICAL", "service": "payment", "message": "Payment gateway unreachable", "gateway": "stripe", "retry_count": 3},
+  {"timestamp": "2026-03-06T10:04:00Z", "level": "INFO", "service": "payment", "message": "Payment gateway reconnected", "gateway": "stripe"},
+  {"timestamp": "2026-03-06T10:05:22Z", "level": "ERROR", "service": "api", "message": "Invalid request body", "endpoint": "/api/orders", "status_code": 400},
+  {"timestamp": "2026-03-06T10:06:00Z", "level": "INFO", "service": "scheduler", "message": "Cron job completed", "job": "cleanup_temp_files", "duration_ms": 1200}
+]

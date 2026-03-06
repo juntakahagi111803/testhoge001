@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log Viewer</title>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+  <style>
+    pre { white-space: pre-wrap; word-wrap: break-word; }
+  </style>
+</head>
+<body class="min-h-screen bg-base-200">
+
+  <!-- Navbar -->
+  <div class="navbar bg-base-100 shadow-lg">
+    <div class="flex-1">
+      <a href="/" class="btn btn-ghost text-xl">Log Viewer</a>
+    </div>
+    <div class="flex-none">
+      <span class="badge badge-info">{{ log_dir }}</span>
+    </div>
+  </div>
+
+  <div class="container mx-auto p-4">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+
+      <!-- Sidebar: File list -->
+      <div class="lg:col-span-1">
+        <div class="card bg-base-100 shadow-md">
+          <div class="card-body">
+            <h2 class="card-title text-sm">Log Files</h2>
+
+            <!-- Upload -->
+            <form hx-post="/upload" hx-target="#file-list" hx-encoding="multipart/form-data" class="mb-2">
+              <input type="file" name="file" accept=".json,.yaml,.yml"
+                     class="file-input file-input-bordered file-input-sm w-full" />
+              <button type="submit" class="btn btn-primary btn-sm w-full mt-2">Upload</button>
+            </form>
+
+            <div class="divider my-1"></div>
+
+            <!-- File list -->
+            <div id="file-list">
+              {% include "partials/file_list.html" %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main content -->
+      <div class="lg:col-span-3">
+        <div class="card bg-base-100 shadow-md">
+          <div class="card-body">
+            <!-- Filters -->
+            <div id="filters" class="flex flex-wrap gap-2 mb-4">
+              <input type="text" id="search-input" name="search" placeholder="Search..."
+                     class="input input-bordered input-sm w-48" />
+              <select id="level-select" class="select select-bordered select-sm">
+                <option value="all">All Levels</option>
+                <option value="debug">DEBUG</option>
+                <option value="info">INFO</option>
+                <option value="warning">WARNING</option>
+                <option value="error">ERROR</option>
+                <option value="critical">CRITICAL</option>
+              </select>
+              <button id="filter-btn" class="btn btn-sm btn-outline" onclick="applyFilter()">Filter</button>
+            </div>
+
+            <!-- Log table -->
+            <div id="log-content">
+              <div class="text-center text-base-content/50 py-10">
+                Select a log file from the sidebar
+              </div>
+            </div>
+
+            <!-- Detail modal -->
+            <dialog id="detail-modal" class="modal">
+              <div class="modal-box w-11/12 max-w-3xl">
+                <form method="dialog">
+                  <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">x</button>
+                </form>
+                <div id="detail-content"></div>
+              </div>
+              <form method="dialog" class="modal-backdrop"><button>close</button></form>
+            </dialog>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let currentFile = null;
+
+    function selectFile(filename) {
+      currentFile = filename;
+      // Highlight selected
+      document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+      const el = document.querySelector(`[data-file="${filename}"]`);
+      if (el) el.classList.add('active');
+
+      loadLogs();
+    }
+
+    function loadLogs() {
+      if (!currentFile) return;
+      const search = document.getElementById('search-input').value;
+      const level = document.getElementById('level-select').value;
+      const params = new URLSearchParams({ file: currentFile, search, level });
+      htmx.ajax('GET', `/view?${params}`, { target: '#log-content' });
+    }
+
+    function applyFilter() {
+      loadLogs();
+    }
+
+    function showDetail(filename, index) {
+      const params = new URLSearchParams({ file: filename, index });
+      htmx.ajax('GET', `/detail?${params}`, { target: '#detail-content' }).then(() => {
+        document.getElementById('detail-modal').showModal();
+      });
+    }
+
+    // Allow Enter key in search
+    document.getElementById('search-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); applyFilter(); }
+    });
+  </script>
+
+</body>
+</html>
